@@ -32,3 +32,7 @@ class UploadFileView(APIView):
                 return Response({"error": "Unsupported file type."}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class ImageListView(generics.ListAPIView):
+    queryset = UploadedImage.objects.all()
+    serializer_class = UploadedImageSerializer
