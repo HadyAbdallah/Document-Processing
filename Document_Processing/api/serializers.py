@@ -1,15 +1,15 @@
 from rest_framework import serializers
-from models import UploadedPDF,UploadedImage
+from .models import UploadedImage,UploadedPDF
 
 class ImageSerializer(serializers.ModelSerializers):
      class Meta:
         model = UploadedImage
-        fields = '__all__'
-        read_only_fields = ['width', 'height', 'channels', 'uploaded_at']
+        fields = ['id', 'file_path', 'width', 'height', 'channels']
+        read_only_fields = ['width', 'height', 'channels']
 
 
 class PdfSerializer(serializers.ModelSerializers):
     class Meta:
         model = UploadedPDF
-        fields = '__all__'
-        read_only_fields = ['number_of_pages', 'page_width', 'page_height', 'uploaded_at']
+        fields = ['id', 'file_path', 'number_of_pages', 'page_width', 'page_height']
+        read_only_fields = ['number_of_pages', 'page_width', 'page_height']
