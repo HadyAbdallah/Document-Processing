@@ -9,6 +9,13 @@ class UploadedImage(models.Model):
     height = models.PositiveIntegerField(editable=False, null=True)
     channels = models.PositiveIntegerField(editable=False, null=True)
 
+    def delete(self, *args, **kwargs):
+        # Delete the file from the file system
+        if self.file_path and os.path.isfile(self.file_path.path):
+            os.remove(self.file_path.path)
+        # Call the superclass delete method to remove the record from the database
+        super().delete(*args, **kwargs)
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         from PIL import Image
@@ -22,6 +29,13 @@ class UploadedPDF(models.Model):
     number_of_pages = models.PositiveIntegerField(editable=False, null=True)
     page_width = models.FloatField(editable=False, null=True)
     page_height = models.FloatField(editable=False, null=True)
+
+    def delete(self, *args, **kwargs):
+        # Delete the file from the file system
+        if self.file_path and os.path.isfile(self.file_path.path):
+            os.remove(self.file_path.path)
+        # Call the superclass delete method to remove the record from the database
+        super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
