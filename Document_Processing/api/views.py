@@ -45,5 +45,7 @@ class ImageDetailView(generics.RetrieveDestroyAPIView):
     queryset = UploadedImage.objects.all()
     serializer_class = UploadedImageSerializer
 
-    
+class PDFDetailView(generics.RetrieveDestroyAPIView):
+    queryset = UploadedPDF.objects.all()
+    serializer_class = UploadedPDFSerializer 
 
