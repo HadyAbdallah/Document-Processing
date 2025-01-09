@@ -47,5 +47,22 @@ class ImageDetailView(generics.RetrieveDestroyAPIView):
 
 class PDFDetailView(generics.RetrieveDestroyAPIView):
     queryset = UploadedPDF.objects.all()
-    serializer_class = UploadedPDFSerializer 
+    serializer_class = UploadedPDFSerializer
+
+class RotateImageView(APIView):
+    def post(self, request, *args, **kwargs):
+        image_id = request.data.get('image_id')
+        angle = request.data.get('angle')
+
+        try:
+            image = UploadedImage.objects.get(id=image_id)
+            with Image.open(image.file_path.path) as img:
+                rotated_image = img.rotate(angle, expand=True)
+                buffer = BytesIO()
+                rotated_image.save(buffer, format='JPEG')
+                return Response({"rotated_image": base64.b64encode(buffer.getvalue()).decode()}, status=status.HTTP_200_OK)
+        except UploadedImage.DoesNotExist:
+            return Response({"error": "Image not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
 
