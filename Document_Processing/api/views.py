@@ -8,6 +8,7 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
 from rest_framework import generics, status
+from pdf2image import convert_from_path
 
 class UploadFileView(APIView):
     def post(self, request, *args, **kwargs):
@@ -66,3 +67,26 @@ class RotateImageView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST) 
 
+class ConvertPDFToImageView(APIView):
+    def post(self, request, *args, **kwargs):
+        pdf_id = request.data.get('pdf_id')
+
+        try:
+            pdf = UploadedPDF.objects.get(id=pdf_id)
+            poppler_path = r'E:\RDI Task\poppler-24.08.0\Library\bin'  # Adjust this path to where Poppler is installed
+            images = convert_from_path(pdf.file_path.path, poppler_path=poppler_path)
+            
+            # List to hold base64-encoded images
+            encoded_images = []
+
+            for image in images:
+                buffer = BytesIO()
+                image.save(buffer, format='JPEG')
+                encoded_image = base64.b64encode(buffer.getvalue()).decode()
+                encoded_images.append(encoded_image)
+
+            return Response({"images": encoded_images}, status=status.HTTP_200_OK)
+        except UploadedPDF.DoesNotExist:
+            return Response({"error": "PDF not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

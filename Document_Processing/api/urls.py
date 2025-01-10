@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import UploadFileView, ImageListView, PDFListView, ImageDetailView
-from .views import PDFDetailView, RotateImageView
+from .views import PDFDetailView, RotateImageView, ConvertPDFToImageView
 
 urlpatterns = [
     path('upload/', UploadFileView.as_view(), name='upload-file'),
@@ -9,4 +9,5 @@ urlpatterns = [
     path('images/<int:pk>/', ImageDetailView.as_view(), name='image-detail'),
     path('pdfs/<int:pk>/', PDFDetailView.as_view(), name='pdf-detail'),
     path('rotate/', RotateImageView.as_view(), name='rotate-image'),
+    path('convert-pdf-to-image/', ConvertPDFToImageView.as_view(), name='convert-pdf-to-image'),
 ]
